@@ -1,0 +1,297 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2758
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh15440\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs26 \cf0 create table journal\
+(\
+name varchar(30) primary key not null,\
+frequency varchar(30)\
+);\
+\
+create table volume\
+(\
+id integer primary key not null,\
+name varchar(30) primary key not null,\
+dates date,\
+publicationDate date,\
+foreign key name references journal(name)\
+);\
+\
+create table volumeTheme\
+(\
+id integer primary key not null,\
+name varchar(30) primary key not null ,\
+keywld integer primary key not null,\
+foreign key id references volume(id),\
+foreign key name references volume(name),\
+foreign key keywld references keywords(keywld)    \
+);\
+\
+create table person\
+(\
+email varchar(30) primary key not null,\
+name varchar(30) not null,\
+vid integer primary key not null,\
+vname varchar(30) primary key not null,\
+isAuthor boolean,\
+isReviewer boolean,\
+isEditor boolean,\
+foreign key vid references volume(id),\
+foreign key vname references volume(name)    \
+);\
+\
+create table Person\uc0\u304 nterest\
+(\
+email varchar(30) primary key not null,\
+keywId integer primary key not null,\
+foreign key email references person(email),\
+foreign key keywld references keywords(keywld)    \
+);\
+\
+create table keywords\
+(\
+keywld integer primary key not null,\
+keyword varchar(30) not null\
+);\
+\
+create table writtenBy\
+(\
+id integer primary key not null,\
+email varchar(30) primary key,\
+foreign key id references Article(id),\
+foreign key email references person(email)    \
+);\
+\
+create table Article \
+(\
+id integer primary key not null,\
+title varchar(30),\
+bodyText varchar(60),\
+vol\uc0\u304 d integer, \
+volName varchar(30),\
+correspAut varchar(30),\
+submissionDate date,\
+result varchar(100),\
+foreign key vol\uc0\u304 d references volume(id),\
+foreign key volName references volume(name),\
+foreign key correspAut references person(email),\
+foreign key id references ArticleReviewer(id)    \
+);\
+\
+create table ArticleKeywords\
+(\
+aid integer primary key not null,\
+keywld integer primary key not null,\
+foreign key aid references Article(id)    \
+);\
+\
+create table ArticleReviewer\
+(\
+id integer primary key not null,\
+email varchar(30) primary key,\
+score1 integer,\
+score2 integer,\
+score3 integer,\
+foreign key email references person(email)    \
+);\
+\
+\
+INSERT INTO `journal`(`name`, `frequency`) VALUES ('Journal of Chemistry', 'Biannual'),\
+('Journal of Psychology', 'Monthly'),\
+('Journal of Economics', 'Quarterly'),\
+('Journal of Literature', 'Biweekly'),\
+('Journal of History', 'Annually');\
+\
+INSERT INTO `volume`(`vid`, `name`, `dates`, `publicationDate`) VALUES \
+(11, 'Journal of Chemistry', '2024-05-01', '2024-05-15'),\
+(12, 'Journal of Chemistry', '2024-06-01', '2024-06-15'),\
+(21, 'Journal of Psychology', '2024-06-01', '2024-06-15'),\
+(22, 'Journal of Psychology', '2024-07-01', '2024-07-15'),\
+(23, 'Journal of Psychology', '2024-08-01', '2024-08-15'),\
+(31, 'Journal of Economics', '2024-07-01', '2024-07-15'),\
+(32, 'Journal of Economics', '2024-08-01', '2024-08-15'),\
+(41, 'Journal of Literature', '2024-07-01', '2024-07-15'),\
+(51, 'Journal of History', '2024-09-01', '2024-09-15');\
+\
+INSERT INTO `volumeTheme`(`id`, `name`, `keywld`) VALUES \
+(11, 'Journal of Chemistry', 1),\
+(12, 'Journal of Chemistry', 2),\
+(21, 'Journal of Psychology', 3),\
+(22, 'Journal of Psychology', 4),\
+(23, 'Journal of Psychology', 5);\
+(31, 'Journal of Economics', 6),\
+(32, 'Journal of Economics', 7),\
+(41, 'Journal of Literature', 8),\
+(51, 'Journal of History', 9);\
+\
+INSERT INTO `person`(`email`, `name`, `vid`, `vname`, `isAuthor`, `isReviewer`, `isEditor`) VALUES ('carol@gmail.com', 'Carol Davis', 11, 'Journal of Chemistry', true, false, true),\
+('davis@gmail.com', 'Davis Martin', 12, 'Journal of Chemistry', true, true, false),\
+('david@gmail.com', 'David Gilmour', 21, 'Journal of Psychology', true, false, true),\
+('ted@gmail.com', 'Ted Gilly', 22, 'Journal of Psychology', true, false, true),\
+('danny@gmail.com', 'Danny Fisherman', 31, 'Journal of Economics', true, false, true),\
+('emma@gmail.com', 'Emma Brown', 32, 'Journal of Economics', true, false, false),\
+('nick@gmail.com', 'Nick Miller', 41, 'Journal of Literature', true, true, false),\
+('grace@gmail.com', 'Grace Martinez', 51, 'Journal of History', true, false, true);\
+('tom@gmail.com', 'Tom Jerry', 41, 'Journal of Literature', false, true, false),\
+('sofya@gmail.com', 'Sofya Nomore', 51, 'Journal of History', false, false, true);\
+\
+INSERT INTO `ArticleReviewer`(`id`, `email`, `score1`, `score2`, `score3`) VALUES \
+(1, 'carol@gmail.com', 0, 1, 1),\
+(2, 'danny@gmail.com', 1, 0.5, 1),\
+(3, 'david@gmail.com', 1, 1, 0.5),\
+(4, 'davis@gmail.com', 0.5, 1, 0.5), \
+(5, 'emma@gmail.com', 0.5, 1, 0.5), \
+(8, 'tom@gmail.com', 0.5, 1, 1),\
+(9, 'sofya@gmail.com', 0.5, 1, 0.5),\
+(10,'ted@gmail.com', 0, 1, 1);\
+\
+INSERT INTO `Article`(`id`, `title`, `bodyText`, `vol\uc0\u304 d`, `volName`, `correspAut`, `submissionDate`, `result`) VALUES\
+(4, 'Chemical Kinetics', 'How can we mix...', 11, 'Journal of Chemistry', 'carol@gmail.com', '2024-05-10', 'Accepted'),\
+(1, 'What is Organic Chemistry', 'Organic...', 12, 'Journal of Chemistry', 'davis@gmail.com', '2024-05-10', 'Under Review'),\
+(10, 'Understanding Human Behavior ', 'Did you ever wonder...', 21, 'Journal of Psychology', 'david@gmail.com', '2024-06-10', 'Accepted'),\
+(3, 'How we know?', 'Did you ever wonder...', 23, 'Journal of Psychology', 'ted@gmail.com', '2024-06-10', 'Accepted'),\
+(2, 'What is Microeconomics?', 'Microeconomics mean...', 31, 'Journal of Economics', 'emma@gmail.com', '2024-07-10', 'Under Review'),\
+(5, 'Impact of Inflation', 'Lorem ipsum...', 31, 'Journal of Economics', 'danny@gmail.com', '2024-07-10', 'Under Review'),\
+(8, 'Shakespearean Sonnets', 'Shakespearean...', 41, 'Journal of Literature', 'nick@gmail.com', '2024-08-10', 'Accepted'),\
+(9, 'Ancient Egyptians', 'Lorem ipsum...', 51, 'Journal of History', 'grace@gmail.com', '2024-09-10', 'Under Review');\
+\
+INSERT INTO `keywords`(`keywld`, `keyword`) VALUES \
+(1, 'Chemical Reactions'),\
+(2, 'Organic Chemistry'),\
+(3, 'Behavioral Psychology'),\
+(4, 'History of Psychology'),\
+(5, 'Psychology News'),\
+(6, 'Microeconomics'),\
+(7, 'International Economics'),\
+(8, 'Classic Literature'),\
+(9, 'Ancient Civilizations');\
+\
+INSERT INTO `volumeTheme`(`id`, `name`, `keywld`) VALUES \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 (11, 'Journal of Chemistry,1),\
+(12, 'Journal of Chemistry, 2),\
+(21, 'Journal of Psychology', 3),\
+(21, 'Journal of Psychology, 4),\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 (31, 'Journal of Economics', 6),\
+(32, 'Journal of Economics', 7),\
+(41, 'Journal of Literature', 8),\
+(51, 'Journal of History', 9);\
+\
+\
+INSERT INTO `writtenBy`(`id`, `email`) VALUES \
+('4','carol@gmail.com'),\
+('1','davis@gmail.com'),\
+('10','david@gmail.com'),\
+('3','ted@gmail.com'),\
+('2','emma@gmail.com'),\
+('5','danny@gmail.com'),\
+('8','nick@gmail.com'),\
+('9','grace@gmail.com'); \
+\
+INSERT INTO `ArticleKeywords`(`aid`, `keywld`) VALUES \
+('4','1'),\
+('1','2'),\
+('10','3'),\
+('3','4'),\
+('2','6'),\
+('5','7'),\
+('8','8'),\
+('9','9'); \
+\
+INSERT INTO `PersonInterest`(`email`, `keywld`) VALUES \
+('carol@gmail.com','1'),\
+('carol@gmail.com','2'),\
+('davis@gmail.com', '2'),\
+('davis@gmail.com', '1'),\
+('david@gmail.com','3'),\
+('david@gmail.com','4'),\
+('ted@gmail.com', '3'),\
+('ted@gmail.com', '4'),\
+('emma@gmail.com','6'),\
+('emma@gmail.com','7'),\
+('danny@gmail.com', '7'),\
+('danny@gmail.com', '6'),\
+('nick@gmail.com','8'),\
+('grace@gmail.com','9'),\
+('tom@gmail.com','8'),\
+('sofya@gmail.com','9');\
+\
+1)\
+SELECT *\
+FROM Article A, Volume V\
+WHERE  A.voliD = V.vid and V.vid=11 ;\
+\
+2)\
+SELECT Person.*\
+FROM Person, Volume \
+WHERE Volume.vid = 11\
+	AND isAuthor = 'FALSE' AND isReviewer = 'FALSE' AND isEditor = 'FALSE';\
+\
+3)\
+SELECT email, name\
+FROM person\
+WHERE isReviewer = true\
+AND email NOT IN (\
+    SELECT email\
+    FROM ArticleReviewer\
+    WHERE id = 4);\
+\
+4)\
+SELECT R.email, R.score1,R.score2,R.score3\
+FROM ArticleReviewer R\
+WHERE R.id= 2  \
+\
+5)\
+SELECT Person.id, Person.name, Article.id, ArticleReviewer.score1, ArticleReviewer.score2, ArticleReviewer.score3, Article.result\
+FROM ArticleReviewer, Article, Person\
+JOIN Article ON ArticleReviewer.id = Article.id \
+JOIN Person ON ArticleReviewer.email = Person.email\
+WHERE Article.id = 4, \
+	EXISTS(\
+		SELECT COUNT(*)\
+        FROM Article \
+        WHERE Article.id = 4, Article.result = 'Accepted'\
+        );\
+\
+6)\
+SELECT A.title, A.correspAut\
+FROM Article A \
+WHERE A.vol\uc0\u304 d=11 and A.result='Accepted\'92\
+\
+7)\
+SELECT A.title, R.email, A.correspAut \
+FROM Article A, ArticleReviewer R\
+WHERE A.vol\uc0\u304 d=11\
+\
+8)\
+SELECT Person.*\
+COUNT(ArticleReviewer.id) AS numOfReviewers\
+FROM Person, ArticleReviewer\
+JOIN ArticleReviewer ON Person.email = ArticleReviewer.email\
+WHERE Person.isReviewer = 'TRUE'\
+GROUP BY Person.id, Person.email, Person.name\
+HAVING\
+	COUNT(ArticleReviewer.id) = (\
+		SELECT \
+			MIN(COUNT(ArticleReviewer.id)) AS MinNumberOfReview\
+		FROM Person, ArticleReviewer\
+		JOIN ArticleReviewer ON Person.email = ArticleReviewer.email\
+		WHERE Person.isReviewer = 'true'\
+		GROUP BY Person.email\
+9\
+SELECT A.correspAut\
+COUNT(*) AS numOfAccepteds \
+    FROM Article A\
+    WHERE A.result = 'Accepted' \
+    GROUP BY A.correspAut ORDER BY numOfAccepteds DESC;\
+10\
+SELECT A.title, A.result \
+FROM Article A\
+JOIN Person ON A.correspAut = Person.email\
+     WHERE Person.name = 'Carol Davis'\
+}
